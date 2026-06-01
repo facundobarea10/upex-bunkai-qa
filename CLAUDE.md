@@ -367,24 +367,23 @@ Git / PR work → `/git-flow-master` auto-loads. Details in `.claude/skills/git-
 
 ## Git Strategy
 
-<!-- git-flow-master:strategy:solo-main -->
+<!-- git-flow-master:strategy:main-integration -->
+<!-- git-flow-master:integration-branch:staging -->
 
-This project uses the `solo-main` flow: all work lands directly on `main`. There is no integration branch. `main` is always the source of truth.
+This project uses the `main-integration` flow: all work branches off `staging` and merges back to `staging` via PR. `staging` merges to `main` only on release.
 
 **Branch roles**:
 
 | Branch | Role |
 |---|---|
-| `main` | Single long-lived branch. All commits land here. Production-ready at all times. |
+| `main` | Production. PRs merged from `staging` after review. Direct push blocked — PRs required. |
+| `staging` | Integration branch. All feature, fix, test, chore, and AI commits land here first. |
 
 **Commit rules**:
 
-- All commits go directly to `main`.
-- Short-lived work branches (`chore/`, `fix/`, `feat/`, `test/`) are created off `main` and merged (or pushed directly for solo work) back to `main`.
-- No `staging` or integration branch. No release promotion.
-- Hotfixes go directly to `main`.
-
-**Push to `main`**: confirm with user before every direct push (it is the only protected branch).
+- Work branches (`chore/`, `fix/`, `feat/`, `test/`) branch off `staging` and PR back to `staging`.
+- `staging` → `main` promotion via PR only (no direct push to `main`).
+- Hotfixes: branch off `main` → PR to `main` → back-merge to `staging` same day.
 
 ---
 
