@@ -365,6 +365,29 @@ Git / PR work → `/git-flow-master` auto-loads. Details in `.claude/skills/git-
 
 ---
 
+## Git Strategy
+
+<!-- git-flow-master:strategy:solo-main -->
+
+This project uses the `solo-main` flow: all work lands directly on `main`. There is no integration branch. `main` is always the source of truth.
+
+**Branch roles**:
+
+| Branch | Role |
+|---|---|
+| `main` | Single long-lived branch. All commits land here. Production-ready at all times. |
+
+**Commit rules**:
+
+- All commits go directly to `main`.
+- Short-lived work branches (`chore/`, `fix/`, `feat/`, `test/`) are created off `main` and merged (or pushed directly for solo work) back to `main`.
+- No `staging` or integration branch. No release promotion.
+- Hotfixes go directly to `main`.
+
+**Push to `main`**: confirm with user before every direct push (it is the only protected branch).
+
+---
+
 ## 12. PROACTIVE MEMORY TRIGGERS
 
 Engram MCP configured. Call `mem_save` IMMEDIATELY (no user prompt needed) after ANY of:
