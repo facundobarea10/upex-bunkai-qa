@@ -1,0 +1,44 @@
+{
+  "schemaVersion": 7,
+  "templateRepo": "upex-galaxy/agentic-qa-boilerplate",
+  "templateCommit": "e4454b5efc107b2c13f5462d429279eb1efb0aed",
+  "perComponentCommit": {
+    "skills": "e4454b5efc107b2c13f5462d429279eb1efb0aed",
+    "commands": "e4454b5efc107b2c13f5462d429279eb1efb0aed",
+    "scripts": "e4454b5efc107b2c13f5462d429279eb1efb0aed",
+    "docs": "e4454b5efc107b2c13f5462d429279eb1efb0aed",
+    "cli": "e4454b5efc107b2c13f5462d429279eb1efb0aed",
+    "vscode": "e4454b5efc107b2c13f5462d429279eb1efb0aed",
+    "husky": "e4454b5efc107b2c13f5462d429279eb1efb0aed",
+    "agents-docs": "e4454b5efc107b2c13f5462d429279eb1efb0aed",
+    "claude-config": "e4454b5efc107b2c13f5462d429279eb1efb0aed",
+    "tooling": "e4454b5efc107b2c13f5462d429279eb1efb0aed",
+    "env-template": "e4454b5efc107b2c13f5462d429279eb1efb0aed"
+  },
+  "syncedComponents": [],
+  "ignoreFileSync": {
+    ".prettierignore": {
+      "lastSyncedSha": "1e3f9500969ad5ea6ac33eb186773d0daf90633d",
+      "appendedLines": [
+        ".claude/worktrees/"
+      ]
+    }
+  },
+  "packageJsonSync": {
+    "package.json": {
+      "scripts": {
+        "lastSyncedSha": "f06c50d56ebaa88567056a7dba3a01b6158880a6",
+        "appliedKeys": [
+          "vars:env:check"
+        ]
+      },
+      "devDependencies": {
+        "lastSyncedSha": "f06c50d56ebaa88567056a7dba3a01b6158880a6",
+        "appliedKeys": []
+      }
+    }
+  },
+  "cliVersion": "7.0",
+  "lastSyncedAt": "2026-06-01T00:13:32.703Z",
+  "variableSystemVersion": 1
+}

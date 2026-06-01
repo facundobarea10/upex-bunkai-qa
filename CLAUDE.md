@@ -365,6 +365,28 @@ Git / PR work → `/git-flow-master` auto-loads. Details in `.claude/skills/git-
 
 ---
 
+## Git Strategy
+
+<!-- git-flow-master:strategy:main-integration -->
+<!-- git-flow-master:integration-branch:staging -->
+
+This project uses the `main-integration` flow: all work branches off `staging` and merges back to `staging` via PR. `staging` merges to `main` only on release.
+
+**Branch roles**:
+
+| Branch | Role |
+|---|---|
+| `main` | Production. PRs merged from `staging` after review. Direct push blocked — PRs required. |
+| `staging` | Integration branch. All feature, fix, test, chore, and AI commits land here first. |
+
+**Commit rules**:
+
+- Work branches (`chore/`, `fix/`, `feat/`, `test/`) branch off `staging` and PR back to `staging`.
+- `staging` → `main` promotion via PR only (no direct push to `main`).
+- Hotfixes: branch off `main` → PR to `main` → back-merge to `staging` same day.
+
+---
+
 ## 12. PROACTIVE MEMORY TRIGGERS
 
 Engram MCP configured. Call `mem_save` IMMEDIATELY (no user prompt needed) after ANY of:
