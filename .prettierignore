@@ -76,6 +76,7 @@ docs/mcp/
 .auth/
 .playwright/
 !.playwright/cli.config.json
+.session/
 
 # ===== Synced from boilerplate v7.0 =====
 # ----- 2026-06-01 (sync) -----
