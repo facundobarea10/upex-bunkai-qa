@@ -12,6 +12,8 @@
       "command": "bunx",
       "args": [
         "@playwright/mcp@latest",
+        "--browser",
+        "chromium",
         "--caps",
         "vision,pdf,testing,tracing,tabs",
         "--timeout-action",

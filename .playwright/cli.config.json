@@ -3,8 +3,10 @@
     "isolated": false,
     "userDataDir": ".playwright/user-data",
     "browserName": "chromium",
+    "channel": "msedge",
     "launchOptions": {
-      "headless": false
+      "headless": false,
+      "executablePath": "C:/Program Files (x86)/Microsoft/Edge/Application/msedge.exe"
     },
     "contextOptions": {
       "viewport": {
@@ -13,7 +15,7 @@
       }
     }
   },
-  "outputDir": ".playwright/output",
+  "outputDir": ".context/PBI/epics/EPIC-BK-12-user-stories-acceptance-criteria/stories/STORY-BK-16-markdown-editor-write-and-preview-markdown-safely/evidence",
   "outputMode": "file",
   "console": {
     "level": "warning"
