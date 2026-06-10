@@ -1,11 +1,11 @@
 # Markdown Editor | Write and preview Markdown safely
 
-**Jira Key:** [BK-16](https://upexgalaxy67.atlassian.net/browse/BK-16)
-**Epic:** [BK-12](https://upexgalaxy67.atlassian.net/browse/BK-12) (User Stories & Acceptance Criteria)
+**Jira Key:** [BK-16](https://upexgalaxy69.atlassian.net/browse/BK-16)
+**Epic:** [BK-12](https://upexgalaxy69.atlassian.net/browse/BK-12) (User Stories & Acceptance Criteria)
 **Type:** Story
-**Status:** Shift-Left QA
+**Status:** BLOCKED
 **Priority:** Medium
-**Story Points:** -
+**Story Points:** 13
 
 ---
 
@@ -28,28 +28,24 @@
 
 ---
 
-## Fields
+## Traceability
 
-> Each rich-text field is a separate file in this folder.
+### Bugs (2)
 
-- [Acceptance Criteria](./acceptance-criteria.md)
-- [Business Rules](./business-rules.md)
-- [Scope](./scope.md)
-- [Out Of Scope](./out-of-scope.md)
-- [Workflow](./workflow.md)
-- [Acceptance Test Plan (QA)](./acceptance-test-plan.md)
+- [BK-99](https://upexgalaxy69.atlassian.net/browse/BK-99): MarkdownEditor: Description: 50 KB size limit not enforced on submission _(Open)_
+- [BK-100](https://upexgalaxy69.atlassian.net/browse/BK-100): MarkdownEditor: Description: 90% capacity warning threshold not implemented _(Open)_
 
 ---
 
 ## Metadata
 
 - **Created:** 19/5/2026
-- **Updated:** 31/5/2026
+- **Updated:** 9/6/2026
 - **Reporter:** Ely
-- **Assignee:** Facu Barea
-- **Labels:** markdown, mvp, shift-left-reviewed, ux, wave-2
+- **Assignee:** Ely
+- **Labels:** markdown, mvp, shift-left-2026-06-01, shift-left-reviewed, ux, wave-2
 
 ---
 
 _Synced from Jira by sync-jira-issues_
-_Last sync: 2026-06-01T02:22:35.783Z_
+_Last sync: 2026-06-09T16:07:53.638Z_

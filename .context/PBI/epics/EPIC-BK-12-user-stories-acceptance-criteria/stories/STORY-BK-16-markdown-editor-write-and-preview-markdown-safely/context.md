@@ -25,3 +25,13 @@ _Empty at session start. Updated during Stage 2 execution._
 
 - `/sprint-testing` selected over `/shift-left-testing` — user chose this flow to understand the full end-to-end testing pipeline.
 - Story status is Shift-Left QA (pre-dev) — feature may not be deployed yet. Smoke test is the gate.
+
+## Final Status
+
+**Result:** FAILED (7/9 TCs)
+**Workflow Complete:** 2026-06-09
+**Bugs filed:** BK-99 (High — 50 KB limit bypass), BK-100 (Medium — 90% warning missing)
+**ATR:** Posted as comment on BK-16 (id: 11466) — customfield_10284 blocked by screen scheme
+**QA Comment:** Posted on BK-16 (id: 11467) — Template B FAILED
+**Ticket status:** BLOCKED (transition id: 13 "defect reported")
+**Next:** Wait for fix on BK-99 → re-run Stage 2 on TC-06 and TC-07 → repeat Stage 3
