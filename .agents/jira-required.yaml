@@ -177,6 +177,24 @@ unmapped:
 # — declare a slug here when the methodology expects a field semantically but
 # no real Jira field exists yet, then promote it to `required:` once configured.)
 
+# Jira issue link types the methodology uses to express traceability between
+# work items. The slug is the canonical key; the name is the display label
+# resolved via {{jira.link_types.<slug>.name}} at runtime.
+link_types:
+  required:
+    test:
+      name: Tests
+      description: Links a Story or Bug to the Test case(s) that cover it.
+      used_by: [sprint-testing, test-documentation, shift-left-testing]
+    blocks:
+      name: Blocks
+      description: Links an issue that blocks the progress of another.
+      used_by: [sprint-testing]
+    problem_incident:
+      name: Problem/Incident
+      description: Links a Bug to the incident or problem it caused or is caused by.
+      used_by: [sprint-testing]
+
 # Issue types (`work_types`) plus the canonical statuses + transitions the
 # methodology requires per work type. Validated by `bun run jira:check` against
 # the catalog at `.agents/jira-workflows.json`. Status / transition slugs are
