@@ -1,6 +1,6 @@
 # Comments for BK-16
 
-[View in Jira](https://upexgalaxy69.atlassian.net/browse/BK-16)
+[View in Jira](https://jira.upexgalaxy.com/browse/BK-16)
 
 ---
 
@@ -46,7 +46,7 @@
 
 ### Facu Barea - 1/6/2026, 0:09:02
 
-# 🧪 QA Shift-Left Review — [https://upexgalaxy69.atlassian.net/browse/BK-16#icft=BK-16](https://upexgalaxy69.atlassian.net/browse/BK-16#icft=BK-16) Completed
+# 🧪 QA Shift-Left Review — [https://jira.upexgalaxy.com/browse/BK-16#icft=BK-16](https://jira.upexgalaxy.com/browse/BK-16#icft=BK-16) Completed
 
 ## What QA did before you code
 
@@ -95,7 +95,7 @@ These ambiguities were found during the QA analysis. Please address them before 
 3. ***AC4 edge: data: and vbscript: URIs*** — confirm these are also stripped (not just javascript:slight_smile:, per the sanitize-html allowlist
 4. ***AC3 multi-vector*** — confirm behavior when multiple script tags appear in one paste (all must be stripped)
 5. ***Toolbar shortcuts*** — Ctrl+B / Ctrl+I / Ctrl+K behavior: do they wrap the selected text or insert at cursor?
-6. ***Empty save of upstream forms*** — [https://upexgalaxy69.atlassian.net/browse/BK-14#icft=BK-14](https://upexgalaxy69.atlassian.net/browse/BK-14#icft=BK-14) (US CRUD) and [https://upexgalaxy69.atlassian.net/browse/BK-15#icft=BK-15](https://upexgalaxy69.atlassian.net/browse/BK-15#icft=BK-15) (AC CRUD) are the surfaces that mount this editor. Confirm both forms pass the description through the same sanitizer path
+6. ***Empty save of upstream forms*** — [https://jira.upexgalaxy.com/browse/BK-14#icft=BK-14](https://jira.upexgalaxy.com/browse/BK-14#icft=BK-14) (US CRUD) and [https://jira.upexgalaxy.com/browse/BK-15#icft=BK-15](https://jira.upexgalaxy.com/browse/BK-15#icft=BK-15) (AC CRUD) are the surfaces that mount this editor. Confirm both forms pass the description through the same sanitizer path
 
 ## Definition of Done reminder
 
@@ -423,6 +423,20 @@ Artifacts: ATR posted as comment on BK-16 (comment id: 11466), ATP on BK-16 (cus
 
 ---
 
+### Ely - 10/6/2026, 18:48:10
+
+## ✅ Blocking defects resolved — story resumed
+
+The defects blocking this story are fixed, merged to staging, and now in ***Ready For QA***:
+
+| Bug | Status | Fix evidence |
+| --- | --- | --- |
+| BK-99 — MarkdownEditor: 50 KB size limit not enforced on submission | Ready For QA | PR #33 merged to staging · verification details in the bug's fix comment |
+| BK-100 — MarkdownEditor: 90% capacity warning threshold not implemented | Ready For QA | PR #33 merged to staging · verification details in the bug's fix comment |
+
+This story has been moved back to ***In Test*** so testing can resume. Please re-test both defects and continue the story run.
+
+---
+
 
 _Synced from Jira by sync-jira-issues_
-_Last sync: 2026-06-09T16:07:54.396Z_

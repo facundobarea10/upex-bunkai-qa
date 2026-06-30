@@ -1,9 +1,9 @@
 # Markdown Editor | Write and preview Markdown safely
 
-**Jira Key:** [BK-16](https://upexgalaxy69.atlassian.net/browse/BK-16)
-**Epic:** [BK-12](https://upexgalaxy69.atlassian.net/browse/BK-12) (User Stories & Acceptance Criteria)
+**Jira Key:** [BK-16](https://jira.upexgalaxy.com/browse/BK-16)
+**Epic:** [BK-12](https://jira.upexgalaxy.com/browse/BK-12) (User Stories & Acceptance Criteria)
 **Type:** Story
-**Status:** BLOCKED
+**Status:** QA Approved
 **Priority:** Medium
 **Story Points:** 13
 
@@ -32,20 +32,19 @@
 
 ### Bugs (2)
 
-- [BK-99](https://upexgalaxy69.atlassian.net/browse/BK-99): MarkdownEditor: Description: 50 KB size limit not enforced on submission _(Open)_
-- [BK-100](https://upexgalaxy69.atlassian.net/browse/BK-100): MarkdownEditor: Description: 90% capacity warning threshold not implemented _(Open)_
+- [BK-99](https://jira.upexgalaxy.com/browse/BK-99): MarkdownEditor: Description: 50 KB size limit not enforced on submission _(Closed)_
+- [BK-100](https://jira.upexgalaxy.com/browse/BK-100): MarkdownEditor: Description: 90% capacity warning threshold not implemented _(Closed)_
 
 ---
 
 ## Metadata
 
 - **Created:** 19/5/2026
-- **Updated:** 9/6/2026
+- **Updated:** 10/6/2026
 - **Reporter:** Ely
-- **Assignee:** Ely
+- **Assignee:** Facu Barea
 - **Labels:** markdown, mvp, shift-left-2026-06-01, shift-left-reviewed, ux, wave-2
 
 ---
 
 _Synced from Jira by sync-jira-issues_
-_Last sync: 2026-06-09T16:07:53.638Z_

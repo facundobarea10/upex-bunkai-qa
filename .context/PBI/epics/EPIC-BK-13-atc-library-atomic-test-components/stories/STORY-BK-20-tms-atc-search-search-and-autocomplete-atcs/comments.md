@@ -1,14 +1,15 @@
 # Comments for BK-20
 
-[View in Jira](https://upexgalaxy67.atlassian.net/browse/BK-20)
+[View in Jira](https://jira.upexgalaxy.com/browse/BK-20)
 
 ---
 
 ### Ely - 19/5/2026, 21:57:26
 
-# 🧱 Architect Annotation
+1. 🧱 Architect Annotation
 
-## Technical Notes
+1. 
+
 - DB tables touched: `atcs` gets a generated `search*tsv tsvector` column (or trigger-maintained, decided at impl plan). GIN index `atcs*search*tsv*idx` on the tsvector column. No new tables.
 - Tsvector construction: `setweight(to*tsvector('simple', title), 'A') || setweight(to*tsvector('simple', array*to*string(tags, ' ')), 'B')`. Weight A for title, B for tags.
 - Trigger `atcs*tsv*trg` fires BEFORE INSERT OR UPDATE OF title, tags on `atcs` to refresh `search_tsv`. Or use a `GENERATED ALWAYS AS ... STORED` column if Postgres version allows the immutable function constraints (decide in impl plan).
@@ -18,12 +19,14 @@
 - Workspace scoping at service layer: `WHERE workspace*id = $session.workspace*id` always applied, even if RLS exists (defense in depth).
 - Response shape: `{ atc*id, slug, title, module*path, layer, status*dot }`. `module*path` is a denormalized string like `Module A / Submodule B` to avoid a second roundtrip.
 
-## Dependencies
-- Upstream: BK-18 (atcs table must exist with title + tags + updated*at + module*id + workspace_id columns). Wave 1 modules subtree mechanism.
+1. 
+
+- Upstream: [https://jira.upexgalaxy.com/browse/BK-18#icft=BK-18](https://jira.upexgalaxy.com/browse/BK-18#icft=BK-18) (atcs table must exist with title + tags + updated*at + module*id + workspace_id columns). Wave 1 modules subtree mechanism.
 - Downstream: Test composition UI (EPIC-BK-5) consumes this endpoint as the ATC picker autocomplete. The picker debounces user input (~200ms) and renders the result list.
 - External: PostgreSQL `tsvector`, `to*tsquery`, `ts*rank`, GIN indexes. No pg_trgm needed for MVP (semantic/fuzzy search deferred to Phase 2).
 
-## Definition of Done (expanded)
+1. 
+
 - [ ] Migration adds `search_tsv` column + GIN index + trigger (or generated column)
 - [ ] Backfill statement populates `search_tsv` for all existing atcs rows
 - [ ] OpenAPI entry for `GET /atcs/search` with query schema and response shape
@@ -33,18 +36,18 @@
 - [ ] Performance budget documented: search must return < 100ms p95 on a 10k-ATC workspace
 - [ ] Lint + typecheck pass
 
-## Related Documentation
+1. 
+
 - PRD: `.context/PRD/mvp-scope.md` § EPIC-BK-004 (US 4.3)
 - SRS: `.context/SRS/functional-specs.md` § FR-011
 - Business map: `.context/business/business-data-map.md` § atcs (search_tsv column)
 - API contract: `.context/SRS/api-contracts.yaml` § paths./atcs/search
 
-
 ---
 
 ### Facu Barea - 1/6/2026, 18:18:11
 
-# Shift-Left QA — Open Questions (BK-20)
+# Shift-Left QA — Open Questions ([https://jira.upexgalaxy.com/browse/BK-20#icft=BK-20](https://jira.upexgalaxy.com/browse/BK-20#icft=BK-20))
 
 Raised during the Shift-Left QA refinement pass on 2026-06-01. The following questions must be resolved before sprint planning and estimation. Categorized by audience.
 
@@ -84,21 +87,21 @@ Suggested resolution: Confirm IN scope (add AC) or create a follow-up Story.
 
 These do not block PO estimation but block implementation.
 
-***T1 — ****`search_tsv`**** column: ****`GENERATED ALWAYS AS STORED`**** or trigger-maintained?***
+***T1 —**** `search_tsv` ****column:**** `GENERATED ALWAYS AS STORED` ****or trigger-maintained?***
 
 The architect note says "decided at impl plan". Generated column requires an IMMUTABLE function — `array*to*string(tags, ' ')` may not qualify. Trigger (`atcs*tsv*trg` BEFORE INSERT OR UPDATE OF title, tags) is the safer path. Confirm choice so QA can write the integration outline (trigger firing test vs computed column test).
 
-***T2 — ****`module_id`**** for non-existent module: 404 or empty results?***
+***T2 —**** `module_id` ****for non-existent module: 404 or empty results?***
 
-If a caller passes a valid UUID that does not belong to any module in their workspace, should the API return 404 or 200 with `{items: []}`? The recursive CTE returning no rows is indistinguishable from a valid module with no matching ATCs.
+If a caller passes a valid UUID that does not belong to any module in their workspace, should the API return 404 or 200 with `{items: []`}? The recursive CTE returning no rows is indistinguishable from a valid module with no matching ATCs.
 
-***T3 — ****`updated_at`**** null safety***
+***T3 —**** `updated_at` ****null safety***
 
 Confirm `updated*at` has a `NOT NULL DEFAULT now()` constraint in the `atcs` migration. A null `updated*at` makes `EXTRACT(EPOCH FROM (now() - updated_at))` return null, causing the ranking score to be null — undefined sort order.
 
-***T4 — ****`status_dot`**** field in the response shape***
+***T4 —**** `status_dot` ****field in the response shape***
 
-The architect specifies `status*dot` in the response: `{atc*id, slug, title, module*path, layer, status*dot}`. This field is not defined in the ACs or business rules. What values can it take? Is it the ATC's lifecycle status column?
+The architect specifies `status*dot` in the response: `{atc*id, slug, title, module*path, layer, status*dot`}. This field is not defined in the ACs or business rules. What values can it take? Is it the ATC's lifecycle status column?
 
 ***T5 — Empty, absent, and whitespace-only query handling***
 
@@ -106,20 +109,20 @@ Business rules say "at least 1 character". Confirm the exact HTTP response for e
 
 - `?query=` (empty string) — 400 or 200 empty?
 - No `query` param at all — 400 or 200 empty?
-- `?query=   ` (whitespace only) — 400 after trimming?
+- {{?query=   }} (whitespace only) — 400 after trimming?
 
 Knowing the exact error shape lets QA write deterministic negative test cases.
 
 ---
 
 **Raised by: QA Shift-Left batch session — 2026-06-01**
-**Refinement file: **`.context/PBI/epics/EPIC-BK-13-atc-library-atomic-test-components/stories/STORY-BK-20-tms-atc-search-search-and-autocomplete-atcs/shift-left-refinement.md`
+**Refinement file:** `.context/PBI/epics/EPIC-BK-13-atc-library-atomic-test-components/stories/STORY-BK-20-tms-atc-search-search-and-autocomplete-atcs/shift-left-refinement.md`
 
 ---
 
 ### Facu Barea - 1/6/2026, 18:18:16
 
-# PO Decisions — Shift-Left QA Questions (BK-20)
+# PO Decisions — Shift-Left QA Questions ([https://jira.upexgalaxy.com/browse/BK-20#icft=BK-20](https://jira.upexgalaxy.com/browse/BK-20#icft=BK-20))
 
 Answers to the QA open questions raised on 2026-06-01. All decisions apply to MVP scope.
 
@@ -135,7 +138,7 @@ Implementation: Use `to*tsquery('simple', $1 || ':**')` for single-token queries
 
 AC update: AC1 and AC2 should be understood as prefix-aware. "Search for 'expir'" must match "expired token". QA to update the refined ACs accordingly.
 
-***Q2 — Authentication model: ****`requireAuth()`**** (cookie OR Bearer)***
+***Q2 — Authentication model:**** `requireAuth()` ****(cookie OR Bearer)***
 
 Decision: `requireAuth()` — accepts both session cookie (browser users accessing the picker) and Bearer PAT (API consumers, automation scripts). This is the standard pattern for all GET endpoints that serve both the UI and the API surface.
 
@@ -145,7 +148,7 @@ AC to add: "Unauthenticated request to `GET /atcs/search` returns 401 unauthoriz
 
 ***Q3 — Layer filter: IN scope for BK-20***
 
-Decision: The `layer` filter is IN scope for BK-20. Rationale: the architect already defined it in the API contract, the implementation cost is a single optional WHERE clause, and QA engineers searching for ATCs by layer is a core use case (e.g., "show me only UI-layer ATCs in the Login module").
+Decision: The `layer` filter is IN scope for [https://jira.upexgalaxy.com/browse/BK-20#icft=BK-20](https://jira.upexgalaxy.com/browse/BK-20#icft=BK-20). Rationale: the architect already defined it in the API contract, the implementation cost is a single optional WHERE clause, and QA engineers searching for ATCs by layer is a core use case (e.g., "show me only UI-layer ATCs in the Login module").
 
 AC to add: "When `?layer=UI` is applied, only ATCs of layer UI appear in results. ATCs of layer API and Unit are excluded."
 
@@ -153,19 +156,19 @@ AC to add: "When `?layer=UI` is applied, only ATCs of layer UI appear in results
 
 ## Dev Decisions (PO alignment)
 
-***T1 — Trigger-maintained ****`search_tsv`**** (not generated column)***
+***T1 — Trigger-maintained**** `search_tsv` ****(not generated column)***
 
 Aligned decision: Trigger-maintained. `GENERATED ALWAYS AS STORED` requires an immutable function — `array*to*string(tags, ' ')` is not immutable by Postgres definition. The trigger approach (`atcs*tsv*trg` BEFORE INSERT OR UPDATE OF title, tags) is correct and already specified by the architect. No change to the technical direction.
 
-***T2 — Non-existent ****`module_id`****: 200 with empty results***
+***T2 — Non-existent**** `module_id`****: 200 with empty results***
 
-Decision: Return 200 with `{items: []}`. The module subtree CTE returns no rows for an unknown UUID, the WHERE clause matches nothing, and the response is a normal empty result. This avoids exposing module existence to the caller (security by default). No 404.
+Decision: Return 200 with `{items: []`}. The module subtree CTE returns no rows for an unknown UUID, the WHERE clause matches nothing, and the response is a normal empty result. This avoids exposing module existence to the caller (security by default). No 404.
 
-***T3 — ****`updated_at`**** NOT NULL confirmed***
+***T3 —**** `updated_at` ****NOT NULL confirmed***
 
 Decision: The `atcs` migration must include `updated*at TIMESTAMPTZ NOT NULL DEFAULT now()`. This is a required constraint — null `updated*at` breaks the ranking formula. Dev to confirm this is in the migration script before merging.
 
-***T4 — ****`status_dot`**** maps to the ATC lifecycle status***
+***T4 —**** `status_dot` ****maps to the ATC lifecycle status***
 
 Decision: `status_dot` is the ATC's `status` column value. Valid values follow the ATC lifecycle: `draft`, `ready`, `automated`, `deprecated` — matching the Test Case workflow states already defined in the project. The field is a string enum in the response. QA to assert this field is present and one of the valid values.
 
@@ -175,9 +178,9 @@ Decision: All three cases return 400 `validation_failed`:
 
 - `?query=` (empty string after no trimming) — 400
 - No `query` param — 400 (param is required)
-- `?query=   ` (whitespace only, trimmed to empty) — 400 (trim before validate)
+- {{?query=   }} (whitespace only, trimmed to empty) — 400 (trim before validate)
 
-Error body: `{ "error": "validation_failed", "fields": [{ "field": "query", "message": "must be at least 1 non-whitespace character" }] }`. Consistent with the existing 422 validation envelope on other endpoints — note this returns 400 (query param validation) not 422 (body schema validation).
+Error body: {{{ "error": "validation_failed", "fields": [{ "field": "query", "message": "must be at least 1 non-whitespace character" }] }}}. Consistent with the existing 422 validation envelope on other endpoints — note this returns 400 (query param validation) not 422 (body schema validation).
 
 ---
 
@@ -188,7 +191,7 @@ Error body: `{ "error": "validation_failed", "fields": [{ "field": "query", "mes
 
 ### Facu Barea - 1/6/2026, 18:28:53
 
-# Shift-Left Refinement: BK-20 — TMS-ATC Search
+# Shift-Left Refinement: [https://jira.upexgalaxy.com/browse/BK-20#icft=BK-20](https://jira.upexgalaxy.com/browse/BK-20#icft=BK-20) — TMS-ATC Search
 
 ***Status****: Refined — Awaiting PO Estimation | ****Refined on****: 2026-06-01 | ****Modality***: Jira-native
 
@@ -200,14 +203,15 @@ Error body: `{ "error": "validation_failed", "fields": [{ "field": "query", "mes
 - ***Backend***: `GET /api/v1/atcs/search` (NEW). Params: `query` (req, ≥1 char), `module_id`, `layer`, `limit` (default 20, cap 50)
 - ***DB***: `atcs` gains `search*tsv tsvector` + GIN index + trigger `atcs*tsv_trg`
 - ***Ranking****: `ts*rank(search*tsv, query) ** exp(-epoch_diff / 604800)` — relevance × 7-day recency decay
-- ***Dependency***: BK-18 schema confirmed (Ready For Dev). BK-20 adds its own migration for `search_tsv`
+- ***Dependency***: [https://jira.upexgalaxy.com/browse/BK-18#icft=BK-18](https://jira.upexgalaxy.com/browse/BK-18#icft=BK-18) schema confirmed (Ready For Dev). [https://jira.upexgalaxy.com/browse/BK-20#icft=BK-20](https://jira.upexgalaxy.com/browse/BK-20#icft=BK-20) adds its own migration for `search_tsv`
 
-| Axis | Rating | Why |
-|------|--------|-----|
-| Business logic | High | Ranking formula + module subtree recursion + workspace security perimeter |
-| Integration | Medium | BK-18 schema, Wave 1 module_paths, PostgreSQL FTS |
-| Data validation | Medium | query ≥1 char, limit 1–50, layer enum |
-| UI | Low | API-only Story |
+| Axis  | Rating  | Why  |
+| --- | --- | --- |
+| ------ | -------- | ----- |
+| Business logic  | High  | Ranking formula + module subtree recursion + workspace security perimeter  |
+| Integration  | Medium  | [https://jira.upexgalaxy.com/browse/BK-18#icft=BK-18](https://jira.upexgalaxy.com/browse/BK-18#icft=BK-18) schema, Wave 1 module_paths, PostgreSQL FTS  |
+| Data validation  | Medium  | query ≥1 char, limit 1–50, layer enum  |
+| UI  | Low  | API-only Story  |
 
 ***Estimated test effort***: 21 outlines
 
@@ -225,7 +229,7 @@ Error body: `{ "error": "validation_failed", "fields": [{ "field": "query", "mes
 - No layer filter AC — confirmed IN scope. Resolved by PO.
 - No limit boundary ACs — default 20, cap 50 need explicit ACs.
 - No response-shape AC — `module*path`, `status*dot`, `slug` fields unverified.
-- No empty-result AC — 200 `{items:[]}` vs 404 must be explicit.
+- No empty-result AC — 200 `{items:[]`} vs 404 must be explicit.
 
 ---
 
@@ -248,7 +252,7 @@ Error body: `{ "error": "validation_failed", "fields": [{ "field": "query", "mes
 ***S1.3*** Should return empty items when query matches no ATC (Negative, High)
 
 - When: `GET /atcs/search?query=xyznotfound`
-- Then: 200 `{items: []}`
+- Then: 200 `{items: []`}
 
 ---
 
@@ -361,7 +365,7 @@ Error body: `{ "error": "validation_failed", "fields": [{ "field": "query", "mes
 ***SG5*** Should return 200 with empty items when query has no matches (Functional, Medium)
 
 - When: query matches zero ATCs
-- Then: 200 `{items: []}`, NOT 404
+- Then: 200 `{items: []`}, NOT 404
 
 ---
 
@@ -371,7 +375,7 @@ Error body: `{ "error": "validation_failed", "fields": [{ "field": "query", "mes
 
 ### Facu Barea - 1/6/2026, 18:28:59
 
-# Shift-Left Refinement: BK-20 — Phases 4–5 + Assessment (Part 2 of 2)
+# Shift-Left Refinement: [https://jira.upexgalaxy.com/browse/BK-20#icft=BK-20](https://jira.upexgalaxy.com/browse/BK-20#icft=BK-20) — Phases 4–5 + Assessment (Part 2 of 2)
 
 ---
 
@@ -379,14 +383,15 @@ Error body: `{ "error": "validation_failed", "fields": [{ "field": "query", "mes
 
 ### Coverage estimate
 
-| Type | Count |
-|------|-------|
-| Positive | 5 |
-| Negative | 7 |
-| Boundary | 4 |
-| Integration | 3 |
-| Security | 2 |
-| ***Total**** | ****21*** |
+| Type  | Count  |
+| --- | --- |
+| ------ | ------- |
+| Positive  | 5  |
+| Negative  | 7  |
+| Boundary  | 4  |
+| Integration  | 3  |
+| Security  | 2  |
+| ***Total****  | ****21***  |
 
 Rationale: Three independent complexity axes (ranking algorithm, module subtree recursion, workspace security perimeter) each drive a dedicated test cluster. Security cluster is non-negotiable regardless of risk level.
 
@@ -430,20 +435,21 @@ Rationale: Three independent complexity axes (ranking algorithm, module subtree 
 
 ## Phase 5 — Edge Cases (DRAFT)
 
-| # | Edge case | Criticality | Action |
-|---|-----------|-------------|--------|
-| E1 | Partial-word query ("expir" → "expired") — prefix resolved by PO | Critical | Resolved: prefix matching confirmed |
-| E2 | Multi-word query ("expired token") — FTS AND semantics | High | Add positive test case |
-| E3 | `module_id` for non-existent module | High | Resolved by PO: 200 empty, not 404 |
-| E4 | `layer` param with invalid enum ("Mobile") | Medium | NEEDS PO/DEV CONFIRMATION: 400 or ignored? |
-| E5 | Workspace with 0 ATCs | Low | 200 `{items:[]}` — test only |
-| E6 | 10,000+ ATCs — p95 < 100ms budget | High | Performance outline — verify GIN index |
-| E7 | `updated_at` null | High | Resolved by PO: NOT NULL DEFAULT now() required |
-| E8 | Two ATCs with identical `updated_at` | Low | Non-deterministic — don't assert order |
-| E9 | ATC with 10 tags (max) — all indexed | Medium | Test only |
-| E10 | Tag match on ATC in other workspace | Critical | Workspace isolation must hold for tag matches too |
-| E11 | limit=51 vs limit=50 (cap boundary) | Medium | Off-by-one test — cap is ≥50 |
-| E12 | `module_path` for top-level module (no separator) | Low | Expected: module name only, no "/" |
+|  | Edge case  | Criticality  | Action  |
+| --- | --- | --- |
+| --- | ----------- | ------------- | -------- |
+| E1  | Partial-word query ("expir" → "expired") — prefix resolved by PO  | Critical  | Resolved: prefix matching confirmed  |
+| E2  | Multi-word query ("expired token") — FTS AND semantics  | High  | Add positive test case  |
+| E3  | `module_id` for non-existent module  | High  | Resolved by PO: 200 empty, not 404  |
+| E4  | `layer` param with invalid enum ("Mobile")  | Medium  | NEEDS PO/DEV CONFIRMATION: 400 or ignored?  |
+| E5  | Workspace with 0 ATCs  | Low  | 200 `{items:[]`} — test only  |
+| E6  | 10,000+ ATCs — p95 < 100ms budget  | High  | Performance outline — verify GIN index  |
+| E7  | `updated_at` null  | High  | Resolved by PO: NOT NULL DEFAULT now() required  |
+| E8  | Two ATCs with identical `updated_at`  | Low  | Non-deterministic — don't assert order  |
+| E9  | ATC with 10 tags (max) — all indexed  | Medium  | Test only  |
+| E10  | Tag match on ATC in other workspace  | Critical  | Workspace isolation must hold for tag matches too  |
+| E11  | limit=51 vs limit=50 (cap boundary)  | Medium  | Off-by-one test — cap is ≥50  |
+| E12  | `module_path` for top-level module (no separator)  | Low  | Expected: module name only, no "/"  |
 
 ---
 
@@ -461,28 +467,30 @@ Remaining open items: `status*dot` field definition, `limit=0` behavior, `layer`
 
 ## Decisions Applied (from PO comment 2026-06-01)
 
-| Topic | Decision |
-|-------|----------|
-| FTS semantics | Prefix: `to*tsquery + :*` (1 token) / `plainto*tsquery` (multi-word) |
-| Auth | `requireAuth()` — cookie OR Bearer PAT |
-| Layer filter | IN scope BK-20 — add AC |
-| `search_tsv` | Trigger-maintained (not generated column) |
-| Non-existent `module_id` | 200 `{items:[]}` — no 404 |
-| `updated_at` | NOT NULL DEFAULT now() — mandatory constraint |
-| `status_dot` | `draft/ready/automated/deprecated` |
-| Empty/absent/whitespace query | All return 400 `validation_failed` |
+| Topic  | Decision  |
+| --- | --- |
+| ------- | ---------- |
+| FTS semantics  | Prefix: `to*tsquery + :*` (1 token) / `plainto*tsquery` (multi-word)  |
+| Auth  | `requireAuth()` — cookie OR Bearer PAT  |
+| Layer filter  | IN scope [https://jira.upexgalaxy.com/browse/BK-20#icft=BK-20](https://jira.upexgalaxy.com/browse/BK-20#icft=BK-20) — add AC  |
+| `search_tsv`  | Trigger-maintained (not generated column)  |
+| Non-existent `module_id`  | 200 `{items:[]`} — no 404  |
+| `updated_at`  | NOT NULL DEFAULT now() — mandatory constraint  |
+| `status_dot`  | `draft/ready/automated/deprecated`  |
+| Empty/absent/whitespace query  | All return 400 `validation_failed`  |
 
 ---
 
 ## Risks & Mitigation
 
-| Risk | Likelihood | Impact | Covered by |
-|------|-----------|--------|------------|
-| Workspace isolation breach | Low | Critical | Security-1, Security-2 |
-| Ranking null on `updated_at` | Low | High | E7 (constraint confirmed) |
-| Module filter returns flat instead of recursive | Medium | Medium | Positive-4, Integration-2 |
-| TSV trigger not fired after PATCH | Low | Medium | Integration-1 |
-| Performance on 10k+ ATCs | Low | High | E6 (GIN index required) |
+| Risk  | Likelihood  | Impact  | Covered by  |
+| --- | --- | --- | --- |
+| ------ | ----------- | -------- | ------------ |
+| Workspace isolation breach  | Low  | Critical  | Security-1, Security-2  |
+| Ranking null on `updated_at`  | Low  | High  | E7 (constraint confirmed)  |
+| Module filter returns flat instead of recursive  | Medium  | Medium  | Positive-4, Integration-2  |
+| TSV trigger not fired after PATCH  | Low  | Medium  | Integration-1  |
+| Performance on 10k+ ATCs  | Low  | High  | E6 (GIN index required)  |
 
 ---
 
@@ -493,10 +501,135 @@ Remaining open items: `status*dot` field definition, `limit=0` behavior, `layer`
 - Sprint planning: story is estimable — PO decisions applied. 5 ambiguities resolved; 2 minor items remain
 - When story reaches Ready For QA: `/sprint-testing` will detect `shift-left-reviewed` label and short-circuit Phases 1-3
 
-**Full refinement file: **`.context/PBI/epics/EPIC-BK-13-atc-library-atomic-test-components/stories/STORY-BK-20-tms-atc-search-search-and-autocomplete-atcs/shift-left-refinement.md`
+**Full refinement file:** `.context/PBI/epics/EPIC-BK-13-atc-library-atomic-test-components/stories/STORY-BK-20-tms-atc-search-search-and-autocomplete-atcs/shift-left-refinement.md`
+
+---
+
+### Automation for Jira - 20/6/2026, 9:30:19
+
+🔎 Pull Request created. Task is pending to ANALYZE and REVIEW by the team. Waiting for PR Approval.
+
+---
+
+### Automation for Jira - 20/6/2026, 11:36:55
+
+✅ Pull Request is successfully MERGED. Task is Done.
+
+---
+
+### Facu Barea - 24/6/2026, 17:21:05
+
+## Acceptance Test Plan (ATP)
+
+# BK-20 — Acceptance Test Plan (QA)
+
+> Endpoint: `GET /api/v1/atcs/search` · Modality: Jira-native · Surface: API + DB (no browser UI — the picker lives in EPIC-BK-5).
+Reconciled against the REAL implemented contract (OpenAPI). Supersedes the Shift-Left ATP DRAFT on all expected status codes.
+
+## Triage Result
+
+***Risk Score******:****** 8/10 — HIGH.*** Three independent risk axes converge: ranking algorithm (relevance × 7-day recency decay), recursive module subtree, and a hard security perimeter (workspace + project isolation). A single isolation defect leaks cross-tenant test data, which the BK-13 epic classifies as CRITICAL — that alone floors the score at HIGH. No veto applies. Full ATP required.
+
+---
+
+## 1. Test Analysis
+
+***What***: Project-scoped, workspace-scoped full-text search over ATC `title` + `tags`, ranked by FTS relevance with a 7-day recency tie-break, optionally narrowed by a module subtree and/or layer. Powers the autocomplete picker that EPIC-BK-5 consumes.
+
+***Why it matters***: The discovery surface of the ATC Library — sits between ATC creation (BK-18/19) and Test composition (EPIC-BK-5). It is the primary lever for ATC reuse, so correctness of ranking, subtree scoping, and — above all — tenant/project isolation directly drives reuse rate and prevents cross-tenant test-data leakage.
+
+***Risk posture***: HIGH. Security axis is non-negotiable per the BK-13 epic test strategy and is verified at API AND DB level.
+
+---
+
+## 2. Contract reconciliation (vs Shift-Left ATP)
+
+| # | Delta (real contract vs Shift-Left ATP) | Applied |
+| --- | --- | --- |
+| 1 | Empty/absent/whitespace query: ATP said ***400**** → real ****422*** | TC09–TC11 expect `422 validation_failed`. Ambiguity removed. |
+| 2 | `project*id` is ***REQUIRED*** (ATP omitted it) | `project*id` in every positive call. TC18: missing → 422. TC17: project outside memberships → 200 empty. Isolation now project- AND workspace-scoped. |
+| 3 | ***403*** (token without `atc:read` scope) — new dimension | TC22 → 403 `ErrorEnvelope`. |
+| 4 | Prefix matching CONFIRMED (was "NEEDS CONFIRMATION") | TC01 single-token prefix (`expir`→`expired`); TC03 multi-word AND. |
+| 5 | `limit` bounds 1..50 (limit=0 / 51 were open items) | TC12 default 20; TC13 cap 50; TC14 limit=0→422; TC15 limit=51→422. |
+| 6 | Zero matches → ***200 ***`{items:[]}` (never 404) | TC04 asserts 200 + empty. No 404 anywhere. |
+
+Schema confirmation (OpenAPI MCP, authoritative): `query` (req, minLength 1), `project*id` (req, uuid), `module*id` (opt, uuid), `layer` (opt enum `UI|API|Unit`), `limit` (opt int 1..50 default 20). Responses 200 / 401 / 403 / 422 — all errors `ErrorEnvelope`. Item shape: `atc*id, slug, title, module*path, layer, status*dot` (status*dot ∈ `draft/ready/automated/deprecated`).
+
+---
+
+## 3. Scope
+
+***In scope***: FTS by title word (prefix-aware single token) and by tag; multi-word AND; module subtree (recursive) filter; layer filter; recency tie-break ranking; required `project*id` scoping; workspace isolation (API + DB); `limit` bounds (default 20, cap 50, reject 0/51); validation 422s (empty/absent/whitespace query, missing/invalid `project*id`, bad `limit`, bad `layer`); auth gates (401 unauth, 403 missing scope); response shape; zero-match 200 `{items:[]}`; integration (tsv trigger after PATCH, recursive CTE, workspace+project SQL clause).
+
+***Out of scope***: search-box/picker UI rendering (EPIC-BK-5); `used*in`/`test*steps` expansion (table not present yet); load/performance p95 budget (follow-up); deep SQL-injection hardening beyond one parameterization smoke check.
+
+---
+
+## 4. Test Cases (24)
+
+Nomenclature: `BK-20: TC#: Validate <core> <conditional>`. Distribution — Positive 6, Negative 6, Boundary 4, Security 5, Integration 3. All positive calls include required `query` + `project_id`.
+
+| TC | Title | Type | Pri | AC | Steps (concise) | Expected | Layer |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+| TC01 | Validate prefix single-token match returns the ATC with full item shape | Positive | High | AC1 | `GET ?query=expir&project*id=<P1>` auth | 200; ATC present; item exposes `atc*id, slug, title, module*path, layer, status*dot` | API |
+| TC02 | Validate multiple title matches ranked by relevance + recency | Positive | Med | AC1 | `?query=expired&project_id=<P1>` | 200; both ATCs; relevance→recency order | API |
+| TC03 | Validate multi-word query applies AND semantics | Positive | Med | AC1/AC2 | `?query=login%20token&project_id=<P1>` | 200; only ATC with BOTH tokens | API |
+| TC04 | Validate zero-match query returns 200 with empty items | Negative | High | AC1 | `?query=xyznotfound&project_id=<P1>` | 200 `{items:[]}` (never 404) | API |
+| TC05 | Validate tag-only match returns the ATC | Positive | High | AC2 | ATC titled "Navigate to homepage" tagged `["smoke"]`; `?query=smoke&project_id=<P1>` | 200; ATC appears via tag | API |
+| TC06 | Validate module filter includes selected module and descendant subtree | Positive | High | AC3 | `?query=flow&project*id=<P1>&module*id=<Payment>` | 200; ATCs from all 3 levels | API+DB |
+| TC07 | Validate sibling modules excluded when subtree filter active | Negative | High | AC3 | same call; Login module has matching ATC | 200; Login ATC absent | API+DB |
+| TC08 | Validate recency tie-break ranks newer ATC first among equal relevance | Boundary | High | AC4 | two ATCs identical title+tags, `updated*at` today vs ~30d; `?query=validate&project*id=<P1>` | 200; today's ATC first | API+DB |
+| TC09 | Validate empty query string returns 422 | Negative | High | AC5 | `?query=&project*id=<P1>` | 422 `validation*failed` | API |
+| TC10 | Validate absent query param returns 422 | Negative | High | AC5 | `?project*id=<P1>` | 422 `validation*failed` | API |
+| TC11 | Validate whitespace-only query returns 422 | Negative | Med | AC5 | `?query=%20%20%20&project_id=<P1>` | 422 (trim→empty) | API |
+| TC12 | Validate default limit of 20 when limit omitted | Boundary | Med | limit rule | ≥21 matches; `?query=login&project_id=<P1>` | 200; exactly 20 items | API |
+| TC13 | Validate limit=50 honored at upper bound | Boundary | Med | limit rule | ≥51 matches; `&limit=50` | 200; up to 50, no rejection | API |
+| TC14 | Validate limit=0 returns 422 | Boundary | Med | limit rule | `&limit=0` | 422 `validation_failed` | API |
+| TC15 | Validate limit=51 returns 422 | Boundary | Med | limit rule | `&limit=51` | 422 `validation_failed` | API |
+| TC16 | Validate workspace isolation hides another tenant's identically-titled ATC | Security | Critical | AC6 | W1 & W2 each have identical-title ATC; call as W1 | 200; only W1 ATC; W2 atc_id absent | API+DB |
+| TC17 | Validate project outside caller memberships returns empty items | Security | Critical | AC6/Δ2 | `?query=login&project*id=<P*OUT>` | 200 `{items:[]}` (no leak, no error) | API+DB |
+| TC18 | Validate missing project*id returns 422 | Negative | High | Δ2 | `?query=login` (no project*id) | 422 `validation_failed` | API |
+| TC19 | Validate layer filter returns only matching-layer ATCs | Positive | Med | layer | UI/API/Unit ATCs match "validate"; `&layer=UI` | 200; only `layer=UI` items | API |
+| TC20 | Validate invalid layer enum returns 422 | Negative | Med | layer | `&layer=Mobile` | 422 `validation_failed` | API |
+| TC21 | Validate unauthenticated request returns 401 | Security | Critical | Auth | no cookie/Bearer | 401 `ErrorEnvelope` | API |
+| TC22 | Validate token without atc:read scope returns 403 | Security | Critical | Δ3 | valid credential lacking `atc:read` | 403 missing-scope | API |
+| TC23 | Validate search_tsv trigger reindexes after title PATCH | Integration | Med | AC1/index | PATCH title→new token; search new then old | 200 new matches; old no longer matches | API+DB |
+| TC24 | Validate workspace+project scope clause applied at SQL level | Integration | High | AC6 defense-in-depth | inspect executed query/EXPLAIN | `WHERE workspace*id=<session> AND project*id=<param>` present regardless of RLS | DB |
+
+---
+
+## 5. Test-data preconditions
+
+- ***P1 in W1**** seeded with: a "expired"-title ATC; ≥2 ATCs sharing a token (ranking); a tag-only ATC (`["smoke"]`, non-matching title); ATCs across UI/API/Unit on a shared token; ****≥51 ATCs*** matching one token (default-20 + cap-50 boundaries).
+- ***3-level module subtree*** under P1 (Payment → Checkout/Refunds) + a sibling module (Login) with matching ATCs.
+- ***Two identical-title ATCs*** with controlled `updated_at` (today vs ~30 days) for the recency tie-break.
+- ***Second workspace W2*** with an ATC duplicating a W1 ATC title (isolation TC16).
+- ***P******_******OUT*** — a project outside W1 memberships, with matching ATCs (TC17).
+- Credentials from `.env`: `STAGING*USER*EMAIL`/`STAGING*USER*PASSWORD`, a Bearer PAT WITH `atc:read`, and a credential WITHOUT `atc:read` (TC22).
+
+***Execution-time dependencies (flagged for Stage 2, not planning blockers)******:***
+
+1. Second reachable tenant (W2) + P_OUT must be confirmed on staging; absent → TC16 drops to DB-only, TC17 may be unexecutable.
+2. `atc:read`-less credential must be obtainable; absent → TC22 unexecutable.
+3. Volume seeding (≥51 ATCs) for TC12/TC13 likely via `POST /api/v1/atcs`; confirm write access.
+4. DBHub MCP must be probed before DB-layer assertions (TC06/07/08/16/17/23/24).
+
+---
+
+## 6. Recommended execution order (Stage 2)
+
+1. ***Smoke*** — `GET ?query=login&project*id=<P1>` → 200 with items + assert response shape (locks `AtcSearchResult` / `status*dot`).
+2. ***API functional*** — TC01–TC05, TC19 (match, tag, multi-word, zero-match, layer).
+3. ***API validation/auth*** — TC09–TC11, TC14, TC15, TC18, TC20, TC21, TC22.
+4. ***API+DB ranking/subtree*** — TC06, TC07, TC08, TC12, TC13.
+5. ***Security isolation (API + DB)*** — TC16, TC17, TC24.
+6. ***Integration*** — TC23 (trigger after PATCH).
+
+---
+
+**ATP authored Stage 1 (sprint-testing). Formal Jira **`Test`** issues + ROI are produced at Stage 4 (test-documentation) per project jira-native convention.**
 
 ---
 
 
 _Synced from Jira by sync-jira-issues_
-_Last sync: 2026-06-01T21:37:43.964Z_
