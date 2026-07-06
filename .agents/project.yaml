@@ -48,13 +48,13 @@ qa:
       key: null # discovered/created at runtime, then cached here (e.g. PROJ-100)
     test_repository_epic:
       name: QA Test Repository # convention name; holds every Test (TC) issue
-      key: null # discovered/created at runtime, then cached here (e.g. PROJ-456)
+      key: BK-70 # discovered/created at runtime, then cached here (e.g. PROJ-456)
     test_artifacts_epic:
       name: QA Test Artifacts # holds every Test Execution (FTR/STR/ATR), Precondition, Test Set
       key: null # discovered/created at runtime, then cached here (e.g. PROJ-789)
     defect_epic:
       name: QA Defect Management # convention name; the `QA ` prefix marks a process epic, not product
-      key: null # discovered/created at runtime, then cached here (e.g. PROJ-123)
+      key: BK-183 # discovered/created at runtime, then cached here (e.g. PROJ-123)
 
 # Per-environment config. Add/remove environments freely (production, dev, qa, uat, etc.).
 # Each environment must define ALL four keys: web_url, api_url, db_mcp, api_mcp.
