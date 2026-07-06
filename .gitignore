@@ -14,6 +14,9 @@ node_modules/
 .playwright/user-data
 .playwright/output
 **/evidence/
+# Browser profiles dropped by Playwright runs (can leak session/cookie data)
+**/.chrome-profile/
+**/.playwright-profile/
 
 # ===== Auth Storage (Session State) =====
 /.auth/
@@ -135,3 +138,11 @@ dbhub.local.toml
 # matches it, but this guards against future blanket *.lock or skills.* rules.
 !skills.lock.json
 !**/skills.lock.json
+
+# ===== Synced from boilerplate v7.0 =====
+# ----- 2026-06-30 (sync) -----
+.template/claude-md.upstream.sha
+
+# ----- 2026-07-06 (sync) -----
+/.allure/
+/.agents/prompts/

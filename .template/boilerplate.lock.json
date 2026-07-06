@@ -3,42 +3,57 @@
   "templateRepo": "upex-galaxy/agentic-qa-boilerplate",
   "templateCommit": "e4454b5efc107b2c13f5462d429279eb1efb0aed",
   "perComponentCommit": {
-    "skills": "e4454b5efc107b2c13f5462d429279eb1efb0aed",
-    "commands": "e4454b5efc107b2c13f5462d429279eb1efb0aed",
-    "scripts": "e4454b5efc107b2c13f5462d429279eb1efb0aed",
-    "docs": "e4454b5efc107b2c13f5462d429279eb1efb0aed",
+    "skills": "be9bdb609671c22d7940e3858fb8fb85f362a5ba",
+    "commands": "be9bdb609671c22d7940e3858fb8fb85f362a5ba",
+    "scripts": "be9bdb609671c22d7940e3858fb8fb85f362a5ba",
+    "docs": "be9bdb609671c22d7940e3858fb8fb85f362a5ba",
     "cli": "e4454b5efc107b2c13f5462d429279eb1efb0aed",
-    "vscode": "e4454b5efc107b2c13f5462d429279eb1efb0aed",
-    "husky": "e4454b5efc107b2c13f5462d429279eb1efb0aed",
-    "agents-docs": "e4454b5efc107b2c13f5462d429279eb1efb0aed",
-    "claude-config": "e4454b5efc107b2c13f5462d429279eb1efb0aed",
+    "vscode": "6a751463e1445a8466bac3540fc9409d6f883965",
+    "husky": "56ec56992a461e478bb76df13159a6cc9dd5ff80",
+    "agents-docs": "56ec56992a461e478bb76df13159a6cc9dd5ff80",
+    "claude-config": "6a751463e1445a8466bac3540fc9409d6f883965",
     "tooling": "e4454b5efc107b2c13f5462d429279eb1efb0aed",
-    "env-template": "e4454b5efc107b2c13f5462d429279eb1efb0aed"
+    "env-template": "be9bdb609671c22d7940e3858fb8fb85f362a5ba"
   },
   "syncedComponents": [],
   "ignoreFileSync": {
     ".prettierignore": {
-      "lastSyncedSha": "1e3f9500969ad5ea6ac33eb186773d0daf90633d",
+      "lastSyncedSha": "642f57f0d23c79095d66c0edd02994c983ec7ca9",
       "appendedLines": [
-        ".claude/worktrees/"
+        ".claude/worktrees/",
+        "api/openapi*",
+        "api/.openapi-config.json",
+        ".backups/",
+        "packages/decks/"
+      ]
+    },
+    ".gitignore": {
+      "lastSyncedSha": "f52255194b1b13012d8dbafc6dcaf20d7ce49ccd",
+      "appendedLines": [
+        ".template/claude-md.upstream.sha",
+        "/.allure/",
+        "/.agents/prompts/"
       ]
     }
   },
   "packageJsonSync": {
     "package.json": {
       "scripts": {
-        "lastSyncedSha": "f06c50d56ebaa88567056a7dba3a01b6158880a6",
+        "lastSyncedSha": "a5f848544f56080ceff9a25cade06ccd4b05a35d",
         "appliedKeys": [
-          "vars:env:check"
+          "vars:env:check",
+          "env"
         ]
       },
       "devDependencies": {
-        "lastSyncedSha": "f06c50d56ebaa88567056a7dba3a01b6158880a6",
-        "appliedKeys": []
+        "lastSyncedSha": "a5f848544f56080ceff9a25cade06ccd4b05a35d",
+        "appliedKeys": [
+          "allure-js-commons"
+        ]
       }
     }
   },
   "cliVersion": "7.0",
-  "lastSyncedAt": "2026-06-01T00:13:32.703Z",
+  "lastSyncedAt": "2026-07-06T23:14:19.250Z",
   "variableSystemVersion": 1
 }

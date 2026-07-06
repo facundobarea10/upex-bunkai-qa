@@ -17,6 +17,10 @@
 import { existsSync, watch } from 'node:fs';
 import { basename, join, relative } from 'node:path';
 
+// Normalize to POSIX separators so the manifest is byte-stable across OSes
+// (Node's `relative` returns backslashes on Windows, which would churn the file).
+const toPosix = (p: string): string => p.replaceAll('\\', '/');
+
 // ============================================================================
 // Types
 // ============================================================================
@@ -244,7 +248,7 @@ async function generateManifest(): Promise<KataManifest> {
     const component: ComponentInfo = {
       name: await extractClassName(file),
       file: basename(file),
-      relativePath: relative(PROJECT_ROOT, file),
+      relativePath: toPosix(relative(PROJECT_ROOT, file)),
       atcs,
     };
     manifest.components.api.push(component);
@@ -258,7 +262,7 @@ async function generateManifest(): Promise<KataManifest> {
     const component: ComponentInfo = {
       name: await extractClassName(file),
       file: basename(file),
-      relativePath: relative(PROJECT_ROOT, file),
+      relativePath: toPosix(relative(PROJECT_ROOT, file)),
       atcs,
     };
     manifest.components.ui.push(component);
@@ -271,7 +275,7 @@ async function generateManifest(): Promise<KataManifest> {
     const precondition: PreconditionInfo = {
       name: await extractClassName(file),
       file: basename(file),
-      relativePath: relative(PROJECT_ROOT, file),
+      relativePath: toPosix(relative(PROJECT_ROOT, file)),
       methods: await extractPreconditionMethods(file),
     };
     manifest.preconditions.push(precondition);
